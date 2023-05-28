@@ -1,0 +1,27 @@
+The system is: Linux - 5.4.0-110-generic - x86_64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /usr/bin/cc 
+Build flags: 
+Id flags: -c 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+
+The C compiler identification is GNU, found in "/local_home/kuzu_ri/GIT_REPO/represent_dlr/UC3/src/models/maxdiv/libmaxdiv/build/CMakeFiles/3.19.6/CompilerIdC/CMakeCCompilerId.o"
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /usr/bin/cc 
+Build flags: 
+Id flags: -c 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+
+The C compiler identification is GNU, found in "/local_home/kuzu_ri/GIT_REPO/represent_dlr/UC3/src/models/maxdiv/libmaxdiv/build/CMakeFiles/3.19.6/CompilerIdC/CMakeCCompilerId.o"
+

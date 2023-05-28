@@ -1,0 +1,48 @@
+#!/bin/bash
+
+module load Stages/2022
+
+
+
+base_folder="/p/project/hai_eo_tree/kuzu/represent/representlib/represent/results/contrastive_learning"
+model_s1_snowdamage="singularity exec --bind "${PWD}:/mnt" --nv  ../represent.sif python -m represent.experiments.uc1_forest_change_map.main_snowdamage --input-type 1 --output-layers 4"
+
+# Get a list of folder numbers
+folder_numbers=($(ls $base_folder | grep -E '^[0-9]+$'))
+
+counter=0
+for folder_num in "${folder_numbers[@]}"; do
+    folder_path="$base_folder/$folder_num"
+    pth_files=($(ls $folder_path | grep "\.pth$"))
+
+    # Check if the folder is empty or has no .pth files
+    if [ ${#pth_files[@]} -eq 0 ]; then
+        echo "Folder $folder_num is empty or has no .pth files"
+        continue
+    fi
+
+    # Extract parent directory name from folder path
+    parent_dir=$(basename $folder_path)
+
+    # Loop through S2 files and run Clearcut command
+    for pth_file in "${pth_files[@]}"; do
+        if [[ $pth_file == *"S1"* ]]; then
+            # Extract base filename without extension
+            filename=$(basename "$pth_file")
+            epoch=$(echo "$filename" | sed -n 's/.*_N0_\([0-9]*\)_model_best\.pth$/\1/p')
+
+            snowdamage_out_dir="represent/result/snowdamage/contrastive/$parent_dir/$epoch/"
+            echo "Starting Snowdamage command: $model_s1_snowdamage --out-dir $snowdamage_out_dir --model-s1-dir $folder_path/$pth_file"
+            $model_s1_snowdamage --out-dir $snowdamage_out_dir --model-s1-dir $folder_path/$pth_file &
+
+            # Increment counter and start a new background process group every 5 iterations
+            ((counter++))
+            if (( counter % 10 == 0 )); then
+                wait
+            fi
+        fi
+    done
+done
+
+# Wait for all background processes to finish
+wait
