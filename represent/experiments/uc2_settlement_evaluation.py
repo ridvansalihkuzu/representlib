@@ -43,19 +43,12 @@ SUPERVISED_CHECKPOINT = "../weights/uc2_supervised_resnet18.pth"
 RANDOM_FOREST_RESULTS_PATH = "/data/RepreSent/UC2/uc2_settlements/random_forest/37LBL.tif"
 RF_URBAN_CLASSID = 7
 
-
-def main():
+def prepare_data(datapath = "/data/RepreSent/UC2", savepath = f"/data/RepreSent/UC2/uc2_settlements/200"):
 
     num_shots = (200, 600)
     imagesize = 10240
-    target_index = 600 # 600:test 200:validation
-    threshold = None #0.5
+    target_index = int(os.path.basename(savepath))
     building_dilation_radius = 5
-
-    datapath = "/data/RepreSent/UC2"
-    savepath = f"/data/RepreSent/UC2/uc2_settlements/{target_index}"
-
-    use_cache = False
 
     X, Y, x_test, existing_labels, buildings, meta = load_uc2_settlement_data(datapath=datapath,
                                                                      target_index=target_index,
@@ -67,54 +60,90 @@ def main():
     # dilate buildings footprints to get a rough estimate of settlement locations (buildings are only single pixels)
     buildings = binary_dilation(buildings, footprint=disk(building_dilation_radius))
 
+    return X, Y, x_test, existing_labels, buildings, meta
+def main():
+
+    use_cache = True
+    do_threshold = False
+    savepath = f"/data/RepreSent/UC2/uc2_settlements/600"
+
+
+    # from validation set
+    thresholds = (0.5, 0.020881448, 0.0022036089, 0.00045269457, 0.041650463)
+
+    threshold_rf, threshold_maml, threshold_moco, threshold_rand, threshold_sup = thresholds
+
+    X, Y, x_test, existing_labels, buildings, meta = prepare_data(savepath=savepath)
+
     logger = Logger()
+
+    finetune_args = dict(
+                     learning_rate=1e-2,
+                     epochs=44,
+                     momentum=0.96,
+                     weight_decay=1e-5
+                 )
+
+    maml_args = dict(
+                    inner_step_size = 0.5,
+                    gradient_steps = 1500,
+                )
 
     ## Supervised
     if not use_cache:
-        probability_sup = run_supervised(X, Y, x_test)
+        probability_sup = run_supervised(X, Y, x_test, args=finetune_args)
         write_probability_tif(probability_sup, meta, os.path.join(savepath, "probability_sup.tif"))
     else:
         probability_sup = read_tif(os.path.join(savepath, "probability_sup.tif"))
-    ap, iou, optimal_threshold = evaluate(probability_sup, buildings, mask=existing_labels, threshold=threshold)
-    logger.log(name="supervised", ap=ap, iou=iou, threshold=optimal_threshold)
+    ap, iou, threshold_sup = evaluate(probability_sup, buildings, mask=existing_labels, threshold=threshold_sup)
+    logger.log(name="supervised", ap=ap, iou=iou, threshold=threshold_sup)
 
     ## MOCO
     if not use_cache:
-        probability_moco = run_moco(X, Y, x_test)
+        probability_moco = run_moco(X, Y, x_test, args=finetune_args)
         write_probability_tif(probability_moco, meta, os.path.join(savepath, "probability_moco.tif"))
     else:
         probability_moco = read_tif(os.path.join(savepath, "probability_moco.tif"))
-    ap, iou, optimal_threshold = evaluate(probability_moco, buildings, mask=existing_labels, threshold=threshold)
-    logger.log(name="moco", ap=ap, iou=iou, threshold=optimal_threshold)
+    ap, iou, threshold_moco = evaluate(probability_moco, buildings, mask=existing_labels, threshold=threshold_moco)
+    logger.log(name="moco", ap=ap, iou=iou, threshold=threshold_moco)
 
     ## Random Init
     if not use_cache:
-        probability_rand = run_randominit(X, Y, x_test)
+        probability_rand = run_randominit(X, Y, x_test, args=finetune_args)
         write_probability_tif(probability_rand, meta, os.path.join(savepath, "probability_rand.tif"))
     else:
         probability_rand = read_tif(os.path.join(savepath, "probability_rand.tif"))
-    ap, iou, optimal_threshold = evaluate(probability_rand, buildings, mask=existing_labels, threshold=threshold)
-    logger.log(name="random_init", ap=ap, iou=iou, threshold=optimal_threshold)
+    ap, iou, threshold_rand = evaluate(probability_rand, buildings, mask=existing_labels, threshold=threshold_rand)
+    logger.log(name="random_init", ap=ap, iou=iou, threshold=threshold_rand)
 
     ## MAML
     if not use_cache:
-        probability_maml = run_maml(X, Y, x_test)
+        probability_maml = run_maml(X, Y, x_test, args=maml_args)
         write_probability_tif(probability_maml, meta, os.path.join(savepath, "probability_maml.tif"))
     else:
         probability_maml = read_tif(os.path.join(savepath, "probability_maml.tif"))
-    ap, iou, optimal_threshold = evaluate(probability_maml, buildings, mask=existing_labels, threshold=threshold)
-    logger.log(name="maml", ap=ap, iou=iou, threshold=optimal_threshold)
+    ap, iou, threshold_maml = evaluate(probability_maml, buildings, mask=existing_labels, threshold=threshold_maml)
+    logger.log(name="maml", ap=ap, iou=iou, threshold=threshold_maml)
 
     ## Random Forest
     prediction_rf = read_tif(RANDOM_FOREST_RESULTS_PATH, meta=meta) == RF_URBAN_CLASSID
     ap, iou, optimal_threshold = evaluate(prediction_rf.astype("float"), buildings, mask=existing_labels, threshold=0.5)
     logger.log(name="random forest", ap=ap, iou=iou, threshold=0.5)
+    threshold_rf = 0.5
 
-    fig = plot_results(x_test, existing_labels, buildings, prediction_rf, probability_maml, probability_moco, probability_rand, threshold=None)
+    probabilities = prediction_rf, probability_maml, probability_moco, probability_rand, probability_sup
+
+
+    print("thresholds")
+    print(thresholds)
+
+    fig = plot_results(x_test, existing_labels, buildings, probabilities, thresholds, do_threshold=do_threshold)
     fig.savefig(os.path.join(savepath, "result.png"), bbox_inches="tight", transparent=True)
     print(f"writing qualitative results to {os.path.join(savepath, 'result.png')}")
 
     df = logger.dataframe()
+
+    df.to_csv(os.path.join(savepath, "result.csv"))
 
     print(df.set_index("name"))#[["ap", "iou"]])
 
@@ -154,7 +183,6 @@ def write_probability_tif(probability, meta, savepath):
     with rio.open(savepath, "w", **profile) as dst:
         dst.write(probability, 1)
 
-
 def evaluate(probabiliy, buildings, mask=None, threshold=None):
     def find_optimal_threshold(y_true, y_score):
         fpr, tpr, thresholds = roc_curve(y_true, y_score)
@@ -177,24 +205,37 @@ def evaluate(probabiliy, buildings, mask=None, threshold=None):
 
     return metrics(y_true=buildings_flat[~mask_flat], y_score=probabiliy_flat[~mask_flat], optimal_threshold=threshold)
 
-def run_moco(X, Y, x_test):
+def run_moco(X, Y, x_test, args):
     state_dict = torch.load(MOCO_CHECKPOINT)["state_dict"]
     state_dict_new = OrderedDict({k:v for k,v in state_dict.items() if "classifier" not in k})
-    return run_finetune(X, Y, x_test, state_dict=state_dict_new)
+    return run_finetune(X, Y, x_test, state_dict=state_dict_new, args=args)
 
-def run_supervised(X, Y, x_test):
+def run_supervised(X, Y, x_test, args):
     state_dict = torch.load(SUPERVISED_CHECKPOINT)["state_dict"]
     state_dict_new = OrderedDict({k:v for k,v in state_dict.items() if "classifier" not in k})
-    return run_finetune(X, Y, x_test, state_dict=state_dict_new)
+    return run_finetune(X, Y, x_test, state_dict=state_dict_new, args=args)
 
-def run_randominit(X, Y, x_test):
-    return run_finetune(X, Y, x_test, state_dict=None)
+def run_randominit(X, Y, x_test, args):
+    return run_finetune(X, Y, x_test, state_dict=None, args=args)
 
-def run_finetune(X, Y, x_test, state_dict):
+def run_finetune(X, Y,
+                 x_test,
+                 state_dict,
+                 args=dict(
+                     learning_rate=1e-3,
+                     epochs=50,
+                     momentum=0.9,
+                     weight_decay=1e-4
+                 )
+                 ):
 
-    learning_rate = 1e-3
-    epochs = 5
+    learning_rate = args["learning_rate"]
+    epochs = args["epochs"]
+    momentum = args["momentum"]
+    weight_decay = args["weight_decay"]
+
     batch_size = 32
+
 
     class SettlementFinetuneDataset(Dataset):
         def __init__(self, X, Y, transform=None):
@@ -240,11 +281,11 @@ def run_finetune(X, Y, x_test, state_dict):
         checkpoint=None,
 
         # Optimizer Parameteres
-        optimizer="Adam",
-        scheduler="CosineAnnealingLR",
-        momentum=0.9,
-        max_epochs=50,
-        learning_rate=2e-2,
+        optimizer="Adam", # unused
+        scheduler="CosineAnnealingLR", # unused
+        momentum=0.9,  # unused
+        max_epochs=50,  # unused
+        learning_rate=2e-2, # unused
     )
 
     parser = ArgumentParser()
@@ -269,8 +310,7 @@ def run_finetune(X, Y, x_test, state_dict):
     model = model.to(device)
     model.train()
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, betas=(momentum, 0.999), weight_decay=weight_decay)
 
     for _ in tqdm(range(epochs), total=epochs):
         model.to(device)
@@ -294,7 +334,11 @@ def run_finetune(X, Y, x_test, state_dict):
 
     return p.squeeze().cpu().numpy()
 
-def run_maml(X, Y, x_test):
+def run_maml(X, Y, x_test, args = dict(
+                    inner_step_size = 0.2,
+                    gradient_steps = 500,
+                )
+             ):
 
     subset_bands = ["S2B1", "S2B2", "S2B3", "S2B4", "S2B5", "S2B6", "S2B7", "S2B8", "S2B8A", "S2B9", "S2B10", "S2B11",
                     "S2B12"]
@@ -302,19 +346,26 @@ def run_maml(X, Y, x_test):
     # initialize an RGB model
     basemodel = models.get_model("maml_resnet12", subset_bands=subset_bands, segmentation=True)
 
-    # basemodel.layer1[0].maxpool = Identity()
-    # basemodel.layer2[0].maxpool = Identity()
-    # basemodel.layer3[0].maxpool = MaxPool2d(kernel_size=[2, 2], stride=1, padding=0, dilation=1, ceil_mode=False)
-    # basemodel.layer4[0].maxpool = MaxPool2d(kernel_size=[2, 2], stride=1, padding=0, dilation=1, ceil_mode=False)
+    inner_step_size = args["inner_step_size"]
+    gradient_steps = args["gradient_steps"]
+
+
+    #if spatial_resolution > 0:
+    #    pass
+        # basemodel.layer1[0].maxpool = Identity()
+        # basemodel.layer2[0].maxpool = Identity()
+
+        # basemodel.layer3[0].maxpool = MaxPool2d(kernel_size=[2, 2], stride=1, padding=0, dilation=1, ceil_mode=False)
+        # basemodel.layer4[0].maxpool = MaxPool2d(kernel_size=[2, 2], stride=1, padding=0, dilation=1, ceil_mode=False)
 
     taskmodel = basemodel
-
     taskmodel.zero_grad()
+
+
+
     batch_size = 32
     device = "cuda"
     first_order = True
-    inner_step_size = 0.2
-    gradient_steps = 500
     verbose = False
 
     transforms = get_transform()
@@ -373,9 +424,13 @@ def get_transform():
     return transforms
 
 
-def plot_results(x_test, existing_labels, buildings, prediction_rf, probability_maml, probability_moco, probability_randominit, threshold=None):
+def plot_results(x_test, existing_labels, buildings, probabilities, thresholds, do_threshold=True):
 
-    fig, axs = plt.subplots(1,7, figsize=(7*3,3))
+    prediction_rf, probability_maml, probability_moco, probability_rand, probability_sup = probabilities
+    thresholds_rf, thresholds_maml, thresholds_moco, thresholds_rand, thresholds_sup = thresholds
+
+    fig, axs = plt.subplots(2,4, figsize=(4*3,2*3))
+    axs = axs.reshape(-1)
 
     ax = axs[0]
     ax.imshow(equalize_hist(x_test[np.array([3, 2, 1])]).transpose(1, 2, 0))
@@ -398,25 +453,32 @@ def plot_results(x_test, existing_labels, buildings, prediction_rf, probability_
     ax.set_title("RF prediction")
 
     ax = axs[4]
-    probability_maml = (probability_maml > 0.5) if threshold is not None else probability_maml
+    probability_maml = (probability_maml > thresholds_maml) if do_threshold else probability_maml
     probability_maml_masked = probability_maml.astype("float")
     probability_maml_masked[existing_labels.astype(bool)] = np.nan
     ax.imshow(probability_maml_masked)
     ax.set_title("MAML prediction")
 
     ax = axs[5]
-    probability_moco = (probability_moco > 0.5) if threshold is not None else probability_moco
+    probability_moco = (probability_moco > thresholds_moco) if do_threshold else probability_moco
     probability_moco_masked = probability_moco.astype("float")
     probability_moco_masked[existing_labels.astype(bool)] = np.nan
     ax.imshow(probability_moco_masked)
     ax.set_title("MOCO prediction")
 
     ax = axs[6]
-    probability_randominit = (probability_randominit > 0.5) if threshold is not None else probability_moco
+    probability_randominit = (probability_rand > thresholds_rand) if do_threshold else probability_rand
     probability_randominit_masked = probability_randominit.astype("float")
     probability_randominit_masked[existing_labels.astype(bool)] = np.nan
     ax.imshow(probability_randominit_masked)
     ax.set_title("random init prediction")
+
+    ax = axs[7]
+    probabiliy_sup = (probability_sup > thresholds_sup) if do_threshold else probability_sup
+    probabiliy_sup_masked = probabiliy_sup.astype("float")
+    probabiliy_sup_masked[existing_labels.astype(bool)] = np.nan
+    ax.imshow(probabiliy_sup_masked)
+    ax.set_title("supervised prediction")
 
     for ax in axs:
         ax.axis("off")
