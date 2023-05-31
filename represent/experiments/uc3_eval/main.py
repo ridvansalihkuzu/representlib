@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
     device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
 
-    input_file = './data/database_test.csv'
+    input_file = './data/sample_data.csv'
     # output directory
     output_dir = './output/'
     os.makedirs(output_dir, exist_ok=True)
