@@ -2,6 +2,8 @@ import os
 import pandas as pd
 from geojson import Point, Feature, FeatureCollection, dump
 import torch
+from represent.models.uc3_gnn import GNN
+from represent.datamodules.uc3_gnn_datamodule import BuildDataLoader
 
 if __name__ == '__main__':
 
@@ -17,13 +19,9 @@ if __name__ == '__main__':
     # output geojson file
     geojson_file = os.path.join(output_dir, 'out_%s.geojson' % (input_file.split('/')[-1].split('.')[0]))
 
-    from represent.models.uc3_gnn import GNN
-
     # GNN model
     model = GNN(pretrained=True).to(device)
     model.eval()
-
-    from represent.datamodules.uc3_gnn_datamodule import BuildDataLoader
 
     # data loader
     loader = BuildDataLoader(input_file).get_data_loader()
