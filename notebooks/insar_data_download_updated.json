@@ -1,0 +1,766 @@
+{
+    "Italy": {
+        "Pertusillo": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_146_0238_IW1_VV.zip",
+                    "bbox": [
+                        15.422107,
+                        40.140889,
+                        16.435424,
+                        40.464649
+                    ],
+                    "processed": "complete"
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_124_0835_IW1_VV.zip",
+                    "bbox": [
+                        15.751607,
+                        40.159858,
+                        16.794862,
+                        40.468287
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_124_0835_IW2_VV.zip",
+                    "bbox": [
+                        14.914342,
+                        40.230099,
+                        15.794239,
+                        40.534836
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_124_0836_IW1_VV.zip",
+                    "bbox": [
+                        15.708831,
+                        39.996409,
+                        16.703766,
+                        40.309123
+                    ],
+                    "processed": "complete"
+                }
+            ],
+            "Intersection": "POLYGON ((15.4221070000000005 40.4646490000000014, 16.4354240000000011 40.4646490000000014, 16.4354240000000011 40.1408890000000014, 15.7088310000000000 40.1408890000000014, 15.7088310000000000 40.2300990000000027, 15.4221070000000005 40.2300990000000027, 15.4221070000000005 40.4646490000000014))"
+        },
+        "Rome": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_117_0246_IW2_VV.zip",
+                    "bbox": [
+                        12.185157,
+                        41.696744,
+                        13.085505,
+                        41.975054
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_117_0247_IW2_VV.zip",
+                    "bbox": [
+                        11.991238,
+                        41.844421,
+                        13.050492,
+                        42.140446
+                    ],
+                    "processed": "complete"
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_095_0825_IW1_VV.zip",
+                    "bbox": [
+                        11.966821,
+                        41.823137,
+                        13.085536,
+                        42.158118
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_095_0826_IW1_VV.zip",
+                    "bbox": [
+                        12.019477,
+                        41.659438,
+                        13.061096,
+                        41.985387
+                    ],
+                    "processed": "complete"
+                }
+            ],
+            "Intersection": "POLYGON ((13.0855049999999995 41.8231370000000027, 13.0610959999999992 41.8231370000000027, 13.0610959999999992 41.6967440000000025, 12.1851570000000002 41.6967440000000025, 12.1851570000000002 41.8444209999999970, 11.9912379999999992 41.8444209999999970, 11.9912379999999992 42.1404459999999972, 13.0504920000000002 42.1404459999999972, 13.0504920000000002 41.9750540000000001, 13.0855049999999995 41.9750540000000001, 13.0855049999999995 41.8231370000000027))"
+        }
+    },
+    "Germany": {
+        "Munich": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_044_0284_IW1_VV.zip",
+                    "bbox": [
+                        11.272368,
+                        47.866313,
+                        12.440152,
+                        48.181505
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_044_0285_IW1_VV.zip",
+                    "bbox": [
+                        11.21878,
+                        48.035673,
+                        12.392294,
+                        48.346709
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_044_0286_IW1_VV.zip",
+                    "bbox": [
+                        11.170397,
+                        48.19735,
+                        12.347164,
+                        48.511729
+                    ],
+                    "processed": "complete"
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_168_0787_IW1_VV.zip",
+                    "bbox": [
+                        11.583782,
+                        48.068934,
+                        12.764243,
+                        48.385541
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_168_0788_IW1_VV.zip",
+                    "bbox": [
+                        11.537041,
+                        47.903549,
+                        12.714851,
+                        48.220913
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_168_0789_IW1_VV.zip",
+                    "bbox": [
+                        11.493404,
+                        47.75203,
+                        12.660677,
+                        48.055641
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_168_0787_IW2_VV.zip",
+                    "bbox": [
+                        10.403049,
+                        48.149973,
+                        11.64122,
+                        48.461212
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_168_0788_IW2_VV.zip",
+                    "bbox": [
+                        10.361615,
+                        47.989511,
+                        11.593423,
+                        48.295736
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_168_0789_IW2_VV.zip",
+                    "bbox": [
+                        10.317115,
+                        47.820256,
+                        11.538859,
+                        48.131448
+                    ],
+                    "processed": "complete"
+                }
+            ],
+            "Intersection": "POLYGON ((12.4401519999999994 47.8663129999999981, 11.2723680000000002 47.8663129999999981, 11.2723680000000002 48.0356730000000027, 11.2187800000000006 48.0356730000000027, 11.2187800000000006 48.1973500000000001, 11.1703969999999995 48.1973500000000001, 11.1703969999999995 48.4612120000000033, 11.6412200000000006 48.4612120000000033, 11.6412200000000006 48.3855410000000035, 12.3471639999999994 48.3855410000000035, 12.3471639999999994 48.3467089999999970, 12.3922939999999997 48.3467089999999970, 12.3922939999999997 48.1815050000000014, 12.4401519999999994 48.1815050000000014, 12.4401519999999994 47.8663129999999981))"
+        },
+        "Berlin": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_146_0310_IW1_VV.zip",
+                    "bbox": [
+                        12.014859,
+                        52.047953,
+                        13.289595,
+                        52.365057
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_146_0310_IW2_VV.zip",
+                    "bbox": [
+                        13.195795,
+                        52.247428,
+                        14.543535,
+                        52.558086
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_146_0311_IW1_VV.zip",
+                    "bbox": [
+                        11.956095,
+                        52.219459,
+                        13.241931,
+                        52.532087
+                    ],
+                    "processed": "complete"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_146_0311_IW2_VV.zip",
+                    "bbox": [
+                        13.151909,
+                        52.411786,
+                        14.500855,
+                        52.717798
+                    ],
+                    "processed": "v0.1-DEU.4.11.4.1_1-929"
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_146_0312_IW1_VV.zip",
+                    "bbox": [
+                        11.898281,
+                        52.376678,
+                        13.192751,
+                        52.694982
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_146_0312_IW2_VV.zip",
+                    "bbox": [
+                        13.099677,
+                        52.583057,
+                        14.427922,
+                        52.879345
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_146_0313_IW1_VV.zip",
+                    "bbox": [
+                        11.850398,
+                        52.541329,
+                        13.1415,
+                        52.850057
+                    ]
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_168_0760_IW1_VV.zip",
+                    "bbox": [
+                        12.882699,
+                        52.520808,
+                        14.178818,
+                        52.841222
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_168_0761_IW1_VV.zip",
+                    "bbox": [
+                        12.83246,
+                        52.354437,
+                        14.121466,
+                        52.676305
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_168_0762_IW1_VV.zip",
+                    "bbox": [
+                        12.780418,
+                        52.190851,
+                        14.066715,
+                        52.51032
+                    ]
+                }
+            ],
+            "Intersection": "POLYGON ((13.2895950000000003 52.2474279999999993, 13.2895950000000003 52.1908510000000021, 12.7804179999999992 52.1908510000000021, 12.7804179999999992 52.5103200000000001, 12.8324599999999993 52.5103200000000001, 12.8324599999999993 52.6763049999999993, 12.8826990000000006 52.6763049999999993, 12.8826990000000006 52.8412220000000019, 14.1788179999999997 52.8412220000000019, 14.1788179999999997 52.5208080000000024, 14.1214659999999999 52.5208080000000024, 14.1214659999999999 52.3544369999999972, 14.0667150000000003 52.3544369999999972, 14.0667150000000003 52.2474279999999993, 13.2895950000000003 52.2474279999999993))"
+        }
+    },
+    "Romania": {
+        "Bucharest": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_131_0262_IW2_VV.zip",
+                    "bbox": [
+                        25.673921,
+                        44.303971,
+                        26.833313,
+                        44.61675
+                    ]
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_007_0810_IW1_VV.zip",
+                    "bbox": [
+                        25.01825,
+                        44.368,
+                        26.124287,
+                        44.680393
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_109_0811_IW2_VV.zip",
+                    "bbox": [
+                        25.917093,
+                        44.225783,
+                        27.065241,
+                        44.53773
+                    ]
+                }
+            ],
+            "Intersection": "POLYGON ((26.8333130000000004 44.3039709999999971, 25.9170930000000013 44.3039709999999971, 25.9170930000000013 44.3680000000000021, 25.6739210000000000 44.3680000000000021, 25.6739210000000000 44.6167500000000032, 26.1242869999999989 44.6167500000000032, 26.1242869999999989 44.5377300000000034, 26.8333130000000004 44.5377300000000034, 26.8333130000000004 44.3039709999999971))"
+        }
+    },
+    "Spain": {
+        "Madrid": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_001_0236_IW2_VV.zip",
+                    "bbox": [
+                        -4.145384,
+                        40.097479,
+                        -3.05875,
+                        40.415438
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_001_0237_IW2_VV.zip",
+                    "bbox": [
+                        -4.182344,
+                        40.261829,
+                        -3.094934,
+                        40.581243
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_001_0238_IW2_VV.zip",
+                    "bbox": [
+                        -4.213726,
+                        40.427622,
+                        -3.130862,
+                        40.746981
+                    ]
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_154_0833_IW1_VV.zip",
+                    "bbox": [
+                        -4.757455,
+                        40.455124,
+                        -3.718058,
+                        40.771523
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_154_0834_IW1_VV.zip",
+                    "bbox": [
+                        -4.79504,
+                        40.289806,
+                        -3.7558,
+                        40.612455
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_081_0835_IW2_VV.zip",
+                    "bbox": [
+                        -3.795222,
+                        40.248968,
+                        -2.708565,
+                        40.565003
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_081_0836_IW2_VV.zip",
+                    "bbox": [
+                        -3.828714,
+                        40.084147,
+                        -2.748473,
+                        40.402952
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_081_0834_IW2_VV.zip",
+                    "bbox": [
+                        -3.755036,
+                        40.41582,
+                        -2.672487,
+                        40.735104
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_154_0835_IW1_VV.zip",
+                    "bbox": [
+                        -4.822645,
+                        40.123475,
+                        -3.79614,
+                        40.440727
+                    ]
+                }
+            ],
+            "Intersection": "POLYGON ((-3.0587499999999999 40.0974789999999999, -3.8287140000000002 40.0974789999999999, -3.8287140000000002 40.1234749999999991, -4.1453840000000000 40.1234749999999991, -4.1453840000000000 40.2618289999999988, -4.1823439999999996 40.2618289999999988, -4.1823439999999996 40.4276219999999995, -4.2137260000000003 40.4276219999999995, -4.2137260000000003 40.7469809999999981, -3.7180580000000001 40.7469809999999981, -3.7180580000000001 40.7351039999999998, -3.1308620000000000 40.7351039999999998, -3.1308620000000000 40.5812430000000006, -3.0949339999999999 40.5812430000000006, -3.0949339999999999 40.4154380000000018, -3.0587499999999999 40.4154380000000018, -3.0587499999999999 40.0974789999999999))"
+        }
+    },
+    "Netherlands": {
+        "Amsterdam": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_088_0310_IW1_VV.zip",
+                    "bbox": [
+                        4.207059,
+                        52.061109,
+                        5.071201,
+                        52.336108
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_088_0311_IW1_VV.zip",
+                    "bbox": [
+                        4.447244,
+                        52.262308,
+                        5.022396,
+                        52.500925
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_088_0310_IW2_VV.zip",
+                    "bbox": [
+                        4.97709,
+                        52.218244,
+                        6.324259,
+                        52.530288
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_088_0311_IW2_VV.zip",
+                    "bbox": [
+                        4.930084,
+                        52.38192,
+                        6.282341,
+                        52.695367
+                    ]
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_110_0762_IW1_VV.zip",
+                    "bbox": [
+                        4.556369,
+                        52.220845,
+                        5.848048,
+                        52.539464
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_110_0763_IW1_VV.zip",
+                    "bbox": [
+                        4.506013,
+                        52.058746,
+                        5.787718,
+                        52.376424
+                    ]
+                }
+            ],
+            "Intersection": "POLYGON ((4.9300839999999999 52.5009250000000023, 4.9300839999999999 52.5394640000000024, 5.8480480000000004 52.5394640000000024, 5.8480480000000004 52.2208449999999971, 5.7877179999999999 52.2208449999999971, 5.7877179999999999 52.2182439999999986, 5.0712010000000003 52.2182439999999986, 5.0712010000000003 52.0611090000000019, 4.5060130000000003 52.0611090000000019, 4.5060130000000003 52.3764240000000001, 4.5563690000000001 52.3764240000000001, 4.5563690000000001 52.5009250000000023, 4.9300839999999999 52.5009250000000023))"
+        }
+    },
+    "Great Britain": {
+        "London": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_132_0304_IW2_VV.zip",
+                    "bbox": [
+                        -0.913215,
+                        51.25382,
+                        0.415336,
+                        51.571456
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_132_0305_IW2_VV.zip",
+                    "bbox": [
+                        -0.947461,
+                        51.418493,
+                        0.372105,
+                        51.734825
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_132_0306_IW2_VV.zip",
+                    "bbox": [
+                        -1.001235,
+                        51.588138,
+                        0.327226,
+                        51.902178
+                    ]
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_081_0767_IW2_VV.zip",
+                    "bbox": [
+                        -1.070206,
+                        51.494613,
+                        0.263623,
+                        51.807665
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_081_0768_IW2_VV.zip",
+                    "bbox": [
+                        -1.117373,
+                        51.329027,
+                        0.215239,
+                        51.647938
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_081_0769_IW2_VV.zip",
+                    "bbox": [
+                        -1.161697,
+                        51.164291,
+                        0.159404,
+                        51.484161
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_081_0767_IW1_VV.zip",
+                    "bbox": [
+                        0.197102,
+                        51.509019,
+                        0.957532,
+                        51.728772
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_081_0768_IW1_VV.zip",
+                    "bbox": [
+                        0.147064,
+                        51.245965,
+                        1.403065,
+                        51.569932
+                    ]
+                }
+            ],
+            "Intersection": ""
+        }
+    },
+    "France": {
+        "Paris": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_059_0288_IW2_VV.zip",
+                    "bbox": [
+                        1.91982,
+                        48.567805,
+                        3.175908,
+                        48.878987
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_059_0289_IW2_VV.zip",
+                    "bbox": [
+                        1.873557,
+                        48.734905,
+                        3.127282,
+                        49.047823
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_059_0290_IW2_VV.zip",
+                    "bbox": [
+                        1.834018,
+                        48.901395,
+                        3.089751,
+                        49.205387
+                    ]
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_008_0782_IW1_VV.zip",
+                    "bbox": [
+                        1.554684,
+                        48.981441,
+                        2.751616,
+                        49.299219
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_008_0783_IW1_VV.zip",
+                    "bbox": [
+                        1.504185,
+                        48.816833,
+                        2.704064,
+                        49.138459
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_008_0784_IW1_VV.zip",
+                    "bbox": [
+                        1.468025,
+                        48.652881,
+                        2.656283,
+                        48.967017
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_008_0785_IW1_VV.zip",
+                    "bbox": [
+                        1.424019,
+                        48.487119,
+                        2.605627,
+                        48.804175
+                    ]
+                }
+            ],
+            "Intersection": "POLYGON ((1.9198200000000001 48.5678049999999999, 1.9198200000000001 48.7349049999999977, 1.8735569999999999 48.7349049999999977, 1.8735569999999999 48.9013950000000008, 1.8340179999999999 48.9013950000000008, 1.8340179999999999 49.2053870000000018, 2.7516159999999998 49.2053870000000018, 2.7516159999999998 48.9814409999999967, 2.7040639999999998 48.9814409999999967, 2.7040639999999998 48.8168330000000026, 2.6562830000000002 48.8168330000000026, 2.6562830000000002 48.6528810000000007, 2.6056270000000001 48.6528810000000007, 2.6056270000000001 48.5678049999999999, 1.9198200000000001 48.5678049999999999))"
+        }
+    },
+    "Poland": {
+        "Warsaw": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_029_0309_IW1_VV.zip",
+                    "bbox": [
+                        20.259231,
+                        51.972318,
+                        21.547857,
+                        52.29473
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_029_0310_IW1_VV.zip",
+                    "bbox": [
+                        20.203384,
+                        52.138116,
+                        21.493824,
+                        52.460773
+                    ]
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_051_0762_IW2_VV.zip",
+                    "bbox": [
+                        19.730069,
+                        52.347606,
+                        21.086582,
+                        52.664727
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_051_0763_IW1_VV.zip",
+                    "bbox": [
+                        20.973466,
+                        52.098168,
+                        22.260769,
+                        52.421498
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_051_0763_IW2_VV.zip",
+                    "bbox": [
+                        19.685536,
+                        52.182066,
+                        21.038697,
+                        52.498443
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_051_0764_IW1_VV.zip",
+                    "bbox": [
+                        20.922904,
+                        51.933242,
+                        22.206186,
+                        52.256896
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_051_0764_IW2_VV.zip",
+                    "bbox": [
+                        19.640732,
+                        52.020335,
+                        20.987812,
+                        52.334528
+                    ]
+                }
+            ],
+            "Intersection": "POLYGON ((21.5478570000000005 51.9723180000000013, 20.9229039999999991 51.9723180000000013, 20.9229039999999991 52.0203350000000029, 20.2592309999999998 52.0203350000000029, 20.2592309999999998 52.1381159999999966, 20.2033839999999998 52.1381159999999966, 20.2033839999999998 52.4607730000000032, 21.0865819999999999 52.4607730000000032, 21.0865819999999999 52.4214979999999997, 21.4938240000000000 52.4214979999999997, 21.4938240000000000 52.2947300000000013, 21.5478570000000005 52.2947300000000013, 21.5478570000000005 51.9723180000000013))"
+        }
+    },
+    "Greece": {
+        "Athens": {
+            "Ascending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_102_0222_IW2_VV.zip",
+                    "bbox": [
+                        23.138826,
+                        37.674101,
+                        24.244516,
+                        37.98911
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_102_0223_IW2_VV.zip",
+                    "bbox": [
+                        23.109561,
+                        37.815213,
+                        24.244516,
+                        38.151139
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_102_0224_IW2_VV.zip",
+                    "bbox": [
+                        23.086898,
+                        37.981944,
+                        24.212865,
+                        38.320552
+                    ]
+                }
+            ],
+            "Descending": [
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_007_0849_IW1_VV.zip",
+                    "bbox": [
+                        23.393226,
+                        37.957557,
+                        24.452603,
+                        38.236069
+                    ]
+                },
+                {
+                    "url": "https://egms.land.copernicus.eu/insar-api/archive/download/EGMS_L2a_007_0850_IW1_VV.zip",
+                    "bbox": [
+                        23.381991,
+                        37.777814,
+                        24.085803,
+                        38.070045
+                    ]
+                }
+            ],
+            "Intersection": "POLYGON ((24.2128650000000007 38.1511390000000006, 24.2445160000000008 38.1511390000000006, 24.2445160000000008 37.9891099999999966, 24.2445160000000008 37.9575570000000013, 24.0858029999999985 37.9575570000000013, 24.0858029999999985 37.7778139999999993, 23.3819909999999993 37.7778139999999993, 23.3819909999999993 38.0700450000000004, 23.3932259999999985 38.0700450000000004, 23.3932259999999985 38.2360690000000005, 24.2128650000000007 38.2360690000000005, 24.2128650000000007 38.1511390000000006))"
+        }
+    }
+}

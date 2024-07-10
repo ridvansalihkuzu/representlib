@@ -19,9 +19,12 @@ from skimage import filters
 from skimage import morphology
 from sklearn.metrics import confusion_matrix
 from skimage.transform import resize
+from scipy.spatial.distance import cdist
 from represent.tools.utils_uc1 import  PreProcess,read_image,plot_resulting_map,interpolate_dataframe
 from represent.models.uc1_resnet_dcva import init_dcva_model
-
+from skimage import measure
+import copy
+from skimage import filters
 
 
 
@@ -49,15 +52,24 @@ class DeepChangeVectorAnalysis():
 
         try:
 
-            label_image = read_image(self.args.ground_truth_path, is_satellite=False,is_cut=False)
-            label_1d_array = (label_image.astype(bool)).ravel()
+            disturbance_label_image = read_image(self.args.ground_truth_disturbance_path, is_satellite=False,is_cut=False)[:,:,0].astype(int)
+            disturbance_1d_array = (disturbance_label_image.astype(bool)).ravel()
+            disturbance_idx = np.argwhere(disturbance_1d_array == True)
 
-            try: forest_mask_image = read_image(self.args.forest_mask_path,is_satellite=False,is_cut=False).astype(int)
-            except: forest_mask_image=np.ones(label_image.shape)
+            intact_label_image = read_image(self.args.ground_truth_intact_path, is_satellite=False, is_cut=False)[:,:,0].astype(int)
+            intact_1d_array = (intact_label_image.astype(bool)).ravel()
+            intact_idx = np.argwhere(intact_1d_array == True)
+
+            try: forest_mask_image = read_image(self.args.forest_mask_path,is_satellite=False,is_cut=False)[:,:,0].astype(int)
+            except: forest_mask_image=np.ones(disturbance_label_image.shape)
             forest_mask_1d_array = (forest_mask_image.astype(bool)).ravel()
-            filter_idx = np.argwhere(forest_mask_1d_array == True)
+            forest_idx = np.argwhere(forest_mask_1d_array == True)
 
-            label_image=label_image*forest_mask_image
+            disturbance_label_image=disturbance_label_image*forest_mask_image
+            intact_label_image = intact_label_image * forest_mask_image
+
+            label_idx = np.union1d(disturbance_idx, intact_idx)
+            filter_idx = np.intersect1d(label_idx, forest_idx)
 
             if self.input_type==1:
                 layer_wise_feature_extractor_S1 = init_dcva_model(self.args.model_s1_dir,self.vector_layer_list,self.args.ssl)
@@ -79,8 +91,8 @@ class DeepChangeVectorAnalysis():
                 post_change_image = np.concatenate([post_change_image_1, post_change_image_2], -1)
 
 
-            pre_change_image = pre_change_image * forest_mask_image
-            post_change_image = post_change_image * forest_mask_image
+            pre_change_image = pre_change_image * np.expand_dims(forest_mask_image,-1)
+            post_change_image = post_change_image * np.expand_dims(forest_mask_image,-1)
 
 
             #print(pre_change_image.shape)
@@ -164,9 +176,30 @@ class DeepChangeVectorAnalysis():
             detected_change_map_normalized = (detected_change_map_normalized - np.nanmin(detected_change_map_normalized)) / (np.nanmax(detected_change_map_normalized) - np.nanmin(detected_change_map_normalized))
 
         detected_change_map_normalized = np.nan_to_num(detected_change_map_normalized)
+
+        disturbed_label_modified = disturbance_label_image.copy().astype(np.float32)
+        disturbed_samples_indices = np.argwhere(disturbed_label_modified)
+        disturbed_samples = detected_change_map_normalized[disturbed_samples_indices[:, 0], disturbed_samples_indices[:, 1]]
+        disturbed_samples_feature_vector = np.mean(disturbed_samples,axis=0)  ##this vector characterizes all disturbed training samples
+
+        detected_change_map_reshaped = np.reshape(detected_change_map_normalized, (-1, 1))
+        distance_from_damaged_class_vector = cdist(detected_change_map_reshaped,np.expand_dims(np.expand_dims(disturbed_samples_feature_vector, 0),0))
+        distance_from_damaged_class_matrix = np.reshape(distance_from_damaged_class_vector, (detected_change_map_normalized.shape[0], detected_change_map_normalized.shape[1]))
+        # distance_from_damaged_class_matrix_normalized_tr = distance_from_damaged_class_matrix * forest_mask_image
+
         ### Reading the forest mask
+        maskOfInterest = np.logical_and(np.logical_or(disturbance_label_image, intact_label_image),forest_mask_image)  ##result is computed over only these mask
+        snowDamageMapAfterConnectedComponentAnalysis = maskOfInterest.copy()
+        connectedCompoentImage, connectedComponentCount = measure.label(maskOfInterest, connectivity=2, return_num=True,background=0)
+
+        intact_label_image = morphology.remove_small_objects(intact_label_image, min_size=self.object_min_size)
+        intact_label_image = morphology.binary_closing(intact_label_image, morphology.disk(self.morphology_size))
+
+        disturbance_label_image = morphology.remove_small_objects(disturbance_label_image,min_size=self.object_min_size)
+        disturbance_label_image = morphology.binary_closing(disturbance_label_image,morphology.disk(self.morphology_size))
 
         cdMap_best = np.zeros(detected_change_map_normalized.shape, dtype=bool)
+        result_composite_best = None
         max_ss = 0
         sensitivity_list = []
         specifity_list = []
@@ -174,7 +207,7 @@ class DeepChangeVectorAnalysis():
         accuracy_list = []
         f1_list = []
 
-        otsuThreshold = filters.threshold_li(detected_change_map_normalized)
+        otsuThreshold = filters.threshold_li(distance_from_damaged_class_matrix)
         Q99 = np.percentile(detected_change_map_normalized, 99.5)
 
         steps = np.arange(0.0 * otsuThreshold, Q99, (Q99 - 0.0 * otsuThreshold) / self.args.threshold_steps)
@@ -183,68 +216,105 @@ class DeepChangeVectorAnalysis():
         pbar = tqdm(enumerate(steps), total=len(steps), desc="Calculating Correct Rate when SSL weights: {} ..".format(self.args.ssl),position=0, leave=True)
         for idx, scl in pbar:
             scaling_factor = scl / 1
+            snwd = copy.deepcopy(snowDamageMapAfterConnectedComponentAnalysis)
 
-            cdMap = (detected_change_map_normalized > scaling_factor)
+            cdMap = (distance_from_damaged_class_matrix > scaling_factor)
             cdMap = morphology.remove_small_objects(cdMap, min_size=self.object_min_size)
             cdMap = morphology.binary_closing(cdMap, morphology.disk(self.morphology_size))
-            #cdMap[forest_mask_image[:,:,0] == 0] = 0
-            if pre_change_image_original_shape[0] < pre_change_image_original_shape[1]:  ##Conformity to row>col
-                cdMap = np.swapaxes(cdMap, 0, 1)
 
-            cd_map_1d_array = cdMap.astype(bool).ravel()
-            confusionMatrixEstimated = confusion_matrix(y_true=label_1d_array[filter_idx], y_pred=cd_map_1d_array[filter_idx])
+            for connectedComponentIter in range(connectedComponentCount):
+                thisComponentUnchange = len(np.argwhere(cdMap * (connectedCompoentImage == connectedComponentIter)))
+                thisComponentChange = len(np.argwhere(connectedCompoentImage == connectedComponentIter)) - thisComponentUnchange
 
-                # getting details of confusion matrix: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix
-            true_negative, false_positive, false_negative, true_positive = confusionMatrixEstimated.ravel()
+                if thisComponentChange > 0.9 * thisComponentUnchange:
+                    snwd[connectedCompoentImage == connectedComponentIter] = 1
+                else:
+                    snwd[connectedCompoentImage == connectedComponentIter] = 0
+
+            result_composite = np.zeros((detected_change_map_normalized.shape[0], detected_change_map_normalized.shape[1], 3))
+            result_composite[:, :, 0] = snwd * (np.logical_or(disturbance_label_image, intact_label_image))
+            result_composite[:, :, 1] = (1 - snwd) * (np.logical_or(disturbance_label_image, intact_label_image))
+            result_composite[:, :, 2] = snwd * (np.logical_or(disturbance_label_image, intact_label_image))
+
+            true_negative, false_positive, false_negative, true_positive = self.estimate_intact_disturbed(result_composite, copy.deepcopy(disturbance_label_image), copy.deepcopy(intact_label_image))
 
             precision = true_positive / (true_positive + false_positive)
             recall = true_positive / (true_positive + false_negative)
-            f1_score = 2 * (precision * recall) / (precision + recall)
+            f1_score = 2 * (precision * recall) / (precision + recall + 0.00001)
 
             sensitivity = true_positive / (true_positive + false_negative)
             specificity = true_negative / (true_negative + false_positive)
             accuracy = (true_positive + true_negative) / (true_positive + true_negative + false_positive + false_negative)
+
             avg_ss = (specificity + sensitivity) / 2
+
             if avg_ss > max_ss:
                 max_ss = avg_ss
                 cdMap_best = cdMap
+                result_composite_best = result_composite
 
-            pbar.set_postfix({'sensitivity ': sensitivity, 'specificity ': specificity,'accuracy ': accuracy,'avg': avg_ss,'max_avg': max_ss})
+            pbar.set_postfix({'sensitivity ': sensitivity, 'specificity ': specificity, 'accuracy ': accuracy, 'avg': avg_ss,'max_avg': max_ss})
 
-                # return scl,i_correct,d_correct
+            # return scl,i_correct,d_correct
             sensitivity_list.append(sensitivity)
             specifity_list.append(specificity)
             idx_list.append(scaling_factor)  # TODO
             accuracy_list.append(accuracy)
             f1_list.append(f1_score)
 
-
-            #if accuracy>0.85:
+            # if sensitivity>0.5:
             #    if not is_best:
             #        cdMap_best=cdMap
             #    is_best=True
 
-            if sensitivity == 0: break
+            if specificity == 0: break
 
-        result_composite = np.zeros((detected_change_map_normalized.shape[0], detected_change_map_normalized.shape[1], 3))
-        result_composite[:, :, 0] = detected_change_map_normalized
-        result_composite[:, :, 1] = forest_mask_image[:,:,0]
-        result_composite[:, :, 2] = cdMap_best
+        out_map = plot_resulting_map(cdMap_best, disturbance_label_image, filter_idx)
+        cdMap_best = plot_resulting_map(cdMap_best, cdMap_best, filter_idx)
 
-        out_map=plot_resulting_map(cdMap_best, label_image,filter_idx)
-        cdMap_best = plot_resulting_map(cdMap_best, cdMap_best,filter_idx)
+        result_table = pd.DataFrame(
+            {'idx': idx_list, 'sensitivity': sensitivity_list, 'specificity': specifity_list, 'accuracy': accuracy_list,
+             'f1': f1_list})
+        result_table = result_table.sort_values(by=['idx'], ascending=False)
+        result_table = interpolate_dataframe(result_table)
+        # last_row = result_table.iloc[-1].copy()
+        # last_row['sensitivity'] = 0
+        # result_table = result_table.append(last_row, ignore_index=True)
 
-        result_table = pd.DataFrame({'idx': idx_list, 'sensitivity': sensitivity_list, 'specificity': specifity_list,'accuracy': accuracy_list, 'f1': f1_list})
-        result_table = result_table.sort_values(by=['idx'])
-        last_row = result_table.iloc[-1].copy()
-        last_row['sensitivity'] = 0
-        result_table = result_table.append(last_row, ignore_index=True)
-        result_table=interpolate_dataframe(result_table)
+        # print(result_table)
+        # shutil.rmtree(temp_dir)
 
-        #print(result_table)
-        shutil.rmtree(temp_dir)
+        return result_table, out_map, cdMap_best, result_composite_best
 
-        return result_table, out_map, cdMap_best,result_composite
+    def estimate_intact_disturbed(self, result_image, disturbance_label_image, intact_label_image):
+        ###There are sometimes overlap between damaged and intact image. Giving preference to the damaged map and removing overlaps from the intact reference
+        intact_label_image = (np.logical_and(intact_label_image, (np.logical_not(disturbance_label_image)))).astype(np.bool)
+        disturbance_label_image = (np.logical_and(disturbance_label_image, (np.logical_not(intact_label_image)))).astype(np.bool)
+
+        snow_damage_result_image = result_image[:, :, 0] == 1
+        intact_result_image = result_image[:, :, 1] == 1
+
+        connected_compoent_image, total_distubed_component_in_reference = measure.label(disturbance_label_image, connectivity=2, return_num=True, background=0)
+
+        correct_component_image, total_distubed_component_correctly_detected = measure.label(disturbance_label_image * snow_damage_result_image, connectivity=2, return_num=True, background=0)
+
+        tp = 0
+        for iter in range(1, total_distubed_component_in_reference):
+            if 0 < np.count_nonzero(correct_component_image[connected_compoent_image == iter]):
+                tp += 1
+
+        connected_compoent_image, totalIntactComponentInReference = measure.label(intact_label_image, connectivity=2, return_num=True, background=0)
+        correct_component_image, totalIntactComponentCorrectlyDetected = measure.label(intact_label_image * intact_result_image, connectivity=2, return_num=True, background=0)
+
+        tn = 0
+        for iter in range(1, totalIntactComponentInReference):
+            if 0 < np.count_nonzero(correct_component_image[connected_compoent_image == iter]):
+                tn += 1
+
+        fp = totalIntactComponentInReference - tn
+        fn = total_distubed_component_in_reference - tp
+
+        return tn, fp, fn, tp
 
 
     def _dcva(self, preChangeImage, postChangeImage, model_layers, saveNormalizedChangeMapPath):

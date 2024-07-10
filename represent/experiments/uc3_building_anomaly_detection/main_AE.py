@@ -16,7 +16,7 @@ import warnings
 import joblib
 import gc
 import numpy as np
-from represent.tools.utils import  AvgMeter, get_lr, anomaly_score_reports,frame_anomaly_table
+from represent.tools.utils_uc3 import  AvgMeter, get_lr, anomaly_score_reports,frame_anomaly_table
 from represent.datamodules.uc3_datamodule import Dataloader
 import os
 import copy
@@ -312,7 +312,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--method', type=str, nargs='+', default=["lae","ae"])  #
 
-    parser.add_argument('--smooth_window', type=int, nargs='+', default=[1, 3, 5, 7, 9, 11,13])#
+    parser.add_argument('--smooth-window', type=int, nargs='+', default=[1, 3, 5, 7, 9, 11,13])#
     parser.add_argument('--learning-rate', type=float, nargs='+', default=[1e-3, 5e-4, 1e-4, 5e-5])
     parser.add_argument('--penalty-rate', type=float, nargs='+', default=[0,1e-2,5e-3, 1e-3, 5e-4]) #1e-2,5e-3, 1e-3, 5e-4,
 
